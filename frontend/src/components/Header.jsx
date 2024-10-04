@@ -35,6 +35,24 @@ const Navbar = () => {
                         onClick={() => setIsOpen(!isOpen)}
                     />
                 </div>
+                {isOpen && (
+                    <div
+                        className={`absolute top-[73px] left-0 w-full bg-[#03001417] backdrop-blur-md shadow-lg shadow-[#2A0E61]/50 z-40 transition-all duration-500 ease-in-out ${
+                            isOpen ? "max-h-screen" : "max-h-0"
+                        } overflow-hidden`}
+                    >
+                        {Links.map((link) => (
+                            <Link
+                                className="block text-white font-normal text-[2.5vh] py-2 px-10 border-b border-[#0300142f] bg-[#0300142f]"
+                                to={link.link}
+                                key={link.name}
+                                onClick={() => setIsOpen(false)}
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     )
