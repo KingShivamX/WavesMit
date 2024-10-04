@@ -9,7 +9,7 @@ const Home = () => {
                 loop
                 src="/blackhole.webm"
                 type="video/webm"
-                className="rotate-180 z-0 absolute top-[-325px] left-0 w-full h-full object-cover"
+                className="rotate-180 z-0 absolute top-[-345px] sm:top-[-325px] left-0 w-full h-full object-cover overflow-hidden"
             ></video>
         </div>
     )
