@@ -9,7 +9,7 @@ const links = [
 
 const Navbar = () => {
     return (
-        <div className="container w-full h-[73px] fixed top-0 shadow-lg shadow-[#2A0E61]/50 bg-[#03001417] backdrop-blur-md z-50 px-10">
+        <div className="w-screen h-[73px] fixed top-0 left-0 right-0 shadow-lg shadow-[#2A0E61]/50 bg-[#03001417] backdrop-blur-md z-50 px-10">
             <div className="w-full h-full flex flex-row items-center justify-between">
                 <div className="text-white text-[4vh] font-semibold">Waves</div>
             </div>
