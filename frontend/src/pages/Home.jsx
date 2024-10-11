@@ -17,6 +17,7 @@ const Home = () => {
                     <h1 className="text-4xl font-bold mb-4">
                         Welcome to Waves
                     </h1>
+                    <h1 className="text-4xl font-bold mb-4">MIT AoE</h1>
                 </div>
             </section>
         </div>
