@@ -4,7 +4,6 @@ const Home = () => {
     const videoRef = useRef(null)
 
     useEffect(() => {
-        // Ensure video loads and plays
         if (videoRef.current) {
             videoRef.current.play().catch((error) => {
                 console.log("Video autoplay failed:", error)
@@ -23,7 +22,6 @@ const Home = () => {
                 className="fixed -top-[5rem] md:-top-[6.3rem] left-0 w-full h-full object-cover rotate-180 z-0"
                 style={{ height: "100vh" }}
             >
-                <source src="/BlackHole.webm" type="video/webm" />
                 <source src="/BlackHole.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
             </video>
