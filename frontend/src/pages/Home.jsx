@@ -24,6 +24,7 @@ const Home = () => {
                 style={{ height: "100vh" }}
             >
                 <source src="/BlackHole.webm" type="video/webm" />
+                <source src="/BlackHole.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
             </video>
 
