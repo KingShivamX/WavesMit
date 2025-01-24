@@ -19,7 +19,7 @@ const Home = () => {
                 playsInline
                 muted
                 loop
-                className="fixed -top-[5rem] md:-top-[6.3rem] left-0 w-full h-full object-cover rotate-180 z-0"
+                className="fixed -top-[5rem] md:-top-[3.6rem] left-0 w-full h-full object-cover rotate-180 z-0"
                 style={{ height: "100vh" }}
             >
                 <source src="/BlackHole.mp4" type="video/mp4" />
