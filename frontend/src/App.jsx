@@ -1,4 +1,3 @@
-import React from "react"
 import { Routes, Route } from "react-router-dom"
 import { Home, About, Vision, Events, Gallery } from "./pages"
 import { Header, Footer, StarBackground } from "./components"

@@ -1,5 +1,3 @@
-import React from "react"
-
 const Events = () => {
     return (
         <section className="home flex items-center justify-center fixed inset-0">
