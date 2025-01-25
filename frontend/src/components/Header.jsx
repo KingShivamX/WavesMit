@@ -32,7 +32,7 @@ const Navbar = () => {
                                      hover:bg-[#2A0E61]/50 hover:shadow-lg hover:shadow-[#2A0E61]/50
                                      ${
                                          location.pathname === link.link
-                                             ? "bg-[#2A0E61]/50 shadow-lg shadow-[#2A0E61]/50"
+                                             ? "bg-[#2A0E61]/20 shadow-lg shadow-[#2A0E61]/50"
                                              : "bg-[#0300142f]"
                                      }`}
                             to={link.link}
@@ -53,26 +53,27 @@ const Navbar = () => {
                 {isOpen && (
                     <div
                         className={`absolute top-[80px] md:top-[90px] left-0 w-full 
-                              ${isHomePage ? "bg-white/90" : "bg-white/10"}
+                              ${isHomePage ? "bg-[#03001485]" : "bg-white/10"}
                               backdrop-blur-lg 
                               shadow-[0_4px_30px_rgba(0,0,0,0.3)] 
                               border-t border-white/20
                               z-40`}
                     >
-                        {Links.map((link) => (
+                        {Links.map((link, index) => (
                             <Link
-                                className={`block font-medium text-base py-3 px-6
+                                className={`block font-medium text-base py-4 px-6
                                          transition-all duration-200 ease-in-out
+                                         ${index !== Links.length - 1 ? 'border-b border-gray-400' : ''}
                                          ${
                                              isHomePage
-                                                 ? "text-gray-800 hover:bg-gray-200/50"
+                                                 ? "text-white hover:bg-[#2A0E61]/50"
                                                  : "text-white hover:bg-white/20"
                                          }
                                          ${
                                              location.pathname === link.link
                                                  ? isHomePage
-                                                     ? "bg-gray-200/50"
-                                                     : "bg-white/20"
+                                                     ? "bg-[#2A0E61]/50"
+                                                     : "bg-gray-500/30"
                                                  : "bg-transparent"
                                          }`}
                                 to={link.link}
