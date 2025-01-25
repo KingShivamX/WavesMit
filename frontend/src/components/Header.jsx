@@ -12,6 +12,7 @@ const Links = [
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false)
     const location = useLocation()
+    const isHomePage = location.pathname === "/"
 
     return (
         <div className="w-screen h-[80px] md:h-[90px] fixed top-0 left-0 right-0 shadow-lg shadow-[#2A0E61]/50 bg-[#03001417] backdrop-blur-md z-50">
@@ -50,15 +51,28 @@ const Navbar = () => {
                 </div>
 
                 {isOpen && (
-                    <div className="absolute top-[80px] md:top-[90px] left-0 w-full bg-[#03001417] backdrop-blur-md shadow-lg shadow-[#2A0E61]/50 z-40">
+                    <div
+                        className={`absolute top-[80px] md:top-[90px] left-0 w-full 
+                              ${isHomePage ? "bg-white/90" : "bg-white/10"}
+                              backdrop-blur-lg 
+                              shadow-[0_4px_30px_rgba(0,0,0,0.3)] 
+                              border-t border-white/20
+                              z-40`}
+                    >
                         {Links.map((link) => (
                             <Link
-                                className={`block text-white font-medium text-base py-3 px-6
+                                className={`block font-medium text-base py-3 px-6
                                          transition-all duration-200 ease-in-out
-                                         hover:bg-[#2A0E61]/50
+                                         ${
+                                             isHomePage
+                                                 ? "text-gray-800 hover:bg-gray-200/50"
+                                                 : "text-white hover:bg-white/20"
+                                         }
                                          ${
                                              location.pathname === link.link
-                                                 ? "bg-[#2A0E61]/50"
+                                                 ? isHomePage
+                                                     ? "bg-gray-200/50"
+                                                     : "bg-white/20"
                                                  : "bg-transparent"
                                          }`}
                                 to={link.link}

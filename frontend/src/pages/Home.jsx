@@ -41,14 +41,31 @@ const Home = () => {
                 Your browser does not support the video tag.
             </video>
 
-            <section className="relative z-10 flex items-center justify-center min-h-screen">
-                <div className="welcome-section text-center text-white p-6 md:p-24">
-                    <h1 className="text-2xl md:text-4xl font-bold mb-4">
+            <section className="relative z-10 flex flex-col items-center justify-center min-h-screen">
+                <div className="welcome-section text-center text-white p-6 md:p-16 max-w-5xl mx-auto">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-700 tracking-tight">
                         Welcome to Waves
                     </h1>
-                    <h1 className="text-2xl md:text-4xl font-bold mb-4">
+
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-16 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 tracking-wide">
                         MIT AoE
-                    </h1>
+                    </h2>
+
+                    <div className="space-y-10">
+                        <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed font-light">
+                            A transformative initiative by MIT Academy of
+                            Engineering dedicated to fostering scientific
+                            thinking, social responsibility, and holistic
+                            growth.
+                        </p>
+
+                        <p className="text-lg md:text-xl lg:text-2xl leading-relaxed text-purple-200/90 font-light">
+                            We create opportunities for students to discover
+                            their potential, inspire others, and work on
+                            impactful projects that bridge the gap between
+                            education and societal needs.
+                        </p>
+                    </div>
                 </div>
             </section>
         </div>
