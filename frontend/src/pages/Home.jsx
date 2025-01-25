@@ -43,7 +43,7 @@ const Home = () => {
 
             <section className="relative z-10 flex flex-col items-center justify-center min-h-screen">
                 <div className="welcome-section text-center text-white p-6 md:p-16 max-w-5xl mx-auto">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-700 tracking-tight">
+                    <h1 className="text-4xl mt-8 md:text-5xl lg:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-700 tracking-tight">
                         Welcome to Waves
                     </h1>
 
