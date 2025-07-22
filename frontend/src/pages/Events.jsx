@@ -204,8 +204,8 @@ const Events = () => {
                         Upcoming Events
                     </h2>
                     <div className="grid md:grid-cols-2 gap-8">
-                        <div className="bg-[#181828]/80 backdrop-blur-md p-6 rounded-2xl shadow-lg">
-                            <div className="text-purple-400 mb-2 text-base">
+                        <div className="bg-[#0300142f] backdrop-blur-md p-8 rounded-2xl shadow-lg shadow-[#2A0E61]/50 hover:shadow-[#2A0E61]/70 transition-all duration-300 hover:translate-y-[-4px]">
+                            <div className="text-purple-400 mb-2">
                                 April 15, 2025
                             </div>
                             <h3 className="text-xl font-semibold mb-2 text-white">
