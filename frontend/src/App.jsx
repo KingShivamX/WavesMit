@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom"
-import { Home, About, Vision, Events, Gallery } from "./pages"
+import { Home, About, Vision, Events, Gallery, Contacts } from "./pages"
 import { Header, Footer, StarBackground } from "./components"
 
 const App = () => {
@@ -13,6 +13,7 @@ const App = () => {
                 <Route path="/vision" element={<Vision />} />
                 <Route path="/events" element={<Events />} />
                 <Route path="/gallery" element={<Gallery />} />
+                <Route path="/contacts" element={<Contacts />} />
                 <Route path="*" element={<Home />} />
             </Routes>
             <Footer />

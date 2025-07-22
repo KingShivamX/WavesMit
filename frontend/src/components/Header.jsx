@@ -7,6 +7,7 @@ const Links = [
     { name: "Vision", link: "/vision" },
     { name: "Events", link: "/events" },
     { name: "Gallery", link: "/gallery" },
+    { name: "Contacts", link: "/contacts" },
 ]
 
 const Navbar = () => {
@@ -35,11 +36,15 @@ const Navbar = () => {
             backdrop-blur-md z-50 transition-all duration-300`}
         >
             <div className="max-w-[2000px] mx-auto h-full flex flex-row items-center justify-between px-4 md:px-20 lg:px-24">
-                <Link
-                    className="text-white text-2xl md:text-4xl font-semibold hover:text-purple-400 transition-all duration-300 transform hover:scale-105"
-                    to={"/"}
-                >
-                    Waves
+                <Link className="flex items-center h-full" to={"/"}>
+                    <img
+                        src="/assets/waves.png"
+                        alt="Waves Logo"
+                        className="h-12 md:h-16 object-contain drop-shadow-lg"
+                        style={{
+                            filter: "invert(1) brightness(2) contrast(1.2)",
+                        }}
+                    />
                 </Link>
 
                 <div className="hidden sm:flex items-center gap-6 md:gap-8 ml-auto">
