@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import StarsCanvas from "../components/StarBackground"
 
 const events = [
     {
@@ -244,62 +245,132 @@ const Gallery = () => {
 
     // Drag-to-scroll logic for preview bar
     const previewBarRefs = useRef([])
-    // Helper for drag-to-scroll
+    // Enhanced drag-to-scroll logic for preview bar
     useEffect(() => {
-        previewBarRefs.current.forEach((bar) => {
+        previewBarRefs.current.forEach((bar, barIndex) => {
             if (!bar) return
+
+            // Check if content overflows and adjust justification
+            const checkOverflow = () => {
+                if (bar.scrollWidth > bar.clientWidth) {
+                    bar.style.justifyContent = "flex-start"
+                } else {
+                    bar.style.justifyContent = "center"
+                }
+            }
+
+            // Check on load and resize
+            checkOverflow()
+            window.addEventListener("resize", checkOverflow)
             let isDown = false
             let startX
             let scrollLeft
+            let velocity = 0
+            let lastX = 0
+            let lastTime = 0
 
             // Mouse events
             const handleMouseDown = (e) => {
                 isDown = true
                 bar.classList.add("dragging")
+                bar.style.cursor = "grabbing"
                 startX = e.pageX - bar.offsetLeft
                 scrollLeft = bar.scrollLeft
+                lastX = e.pageX
+                lastTime = Date.now()
+                velocity = 0
+                e.preventDefault()
             }
+
             const handleMouseLeave = () => {
                 isDown = false
                 bar.classList.remove("dragging")
+                bar.style.cursor = "grab"
             }
+
             const handleMouseUp = () => {
                 isDown = false
                 bar.classList.remove("dragging")
+                bar.style.cursor = "grab"
             }
+
             const handleMouseMove = (e) => {
                 if (!isDown) return
                 e.preventDefault()
                 const x = e.pageX - bar.offsetLeft
-                const walk = (x - startX) * 1.5 // scroll-fast
+                const walk = (x - startX) * 2 // Increased sensitivity
                 bar.scrollLeft = scrollLeft - walk
+
+                // Calculate velocity for momentum
+                const currentTime = Date.now()
+                const deltaTime = currentTime - lastTime
+                if (deltaTime > 0) {
+                    velocity = (e.pageX - lastX) / deltaTime
+                }
+                lastX = e.pageX
+                lastTime = currentTime
             }
-            // Touch events
+
+            // Touch events with improved handling
             let touchStartX
             let touchScrollLeft
+            let touchLastX = 0
+            let touchLastTime = 0
+
             const handleTouchStart = (e) => {
                 isDown = true
-                touchStartX = e.touches[0].pageX - bar.offsetLeft
+                const touch = e.touches[0]
+                touchStartX = touch.pageX - bar.offsetLeft
                 touchScrollLeft = bar.scrollLeft
+                touchLastX = touch.pageX
+                touchLastTime = Date.now()
+                velocity = 0
+                e.preventDefault()
             }
-            const handleTouchEnd = () => {
+
+            const handleTouchEnd = (e) => {
                 isDown = false
+                e.preventDefault()
             }
+
             const handleTouchMove = (e) => {
                 if (!isDown) return
-                const x = e.touches[0].pageX - bar.offsetLeft
-                const walk = (x - touchStartX) * 1.5
+                e.preventDefault()
+                const touch = e.touches[0]
+                const x = touch.pageX - bar.offsetLeft
+                const walk = (x - touchStartX) * 2
                 bar.scrollLeft = touchScrollLeft - walk
+
+                // Calculate velocity for momentum
+                const currentTime = Date.now()
+                const deltaTime = currentTime - touchLastTime
+                if (deltaTime > 0) {
+                    velocity = (touch.pageX - touchLastX) / deltaTime
+                }
+                touchLastX = touch.pageX
+                touchLastTime = currentTime
             }
+
+            // Prevent context menu on long press
+            const handleContextMenu = (e) => {
+                e.preventDefault()
+            }
+
             // Add listeners
             bar.addEventListener("mousedown", handleMouseDown)
             bar.addEventListener("mouseleave", handleMouseLeave)
             bar.addEventListener("mouseup", handleMouseUp)
             bar.addEventListener("mousemove", handleMouseMove)
-            bar.addEventListener("touchstart", handleTouchStart)
-            bar.addEventListener("touchend", handleTouchEnd)
-            bar.addEventListener("touchmove", handleTouchMove)
-            // Cleanup
+            bar.addEventListener("touchstart", handleTouchStart, {
+                passive: false,
+            })
+            bar.addEventListener("touchend", handleTouchEnd, { passive: false })
+            bar.addEventListener("touchmove", handleTouchMove, {
+                passive: false,
+            })
+            bar.addEventListener("contextmenu", handleContextMenu)
+
+            // Cleanup function
             return () => {
                 bar.removeEventListener("mousedown", handleMouseDown)
                 bar.removeEventListener("mouseleave", handleMouseLeave)
@@ -308,6 +379,8 @@ const Gallery = () => {
                 bar.removeEventListener("touchstart", handleTouchStart)
                 bar.removeEventListener("touchend", handleTouchEnd)
                 bar.removeEventListener("touchmove", handleTouchMove)
+                bar.removeEventListener("contextmenu", handleContextMenu)
+                window.removeEventListener("resize", checkOverflow)
             }
         })
     }, [events.length])
@@ -384,22 +457,23 @@ const Gallery = () => {
     }
 
     return (
-        <div className="w-full min-h-screen bg-[#040015] pt-[90px] z-10 px-2 md:px-4">
-            <div className="max-w-4xl mx-auto py-8 md:py-12">
-                <h1 className="text-3xl md:text-4xl font-bold text-white text-center mb-8 md:mb-10">
+        <div className="w-full min-h-screen bg-[#040015] pt-[90px] z-10 relative">
+            <StarsCanvas />
+            <div className="max-w-4xl mx-auto px-2 sm:px-4 md:px-8 py-8 md:py-12">
+                <h1 className="text-3xl md:text-4xl font-bold text-white text-center mb-8 md:mb-10 break-words">
                     Picture Gallery
                 </h1>
-                <div className="flex flex-col gap-8 md:gap-12">
+                <div className="flex flex-col gap-6 md:gap-10">
                     {events.map((event, eventIdx) => (
                         <div
                             key={event.key}
-                            className="mb-6 bg-[#181828]/80 rounded-2xl shadow-lg p-3 md:p-6"
+                            className="mb-6 bg-[#181828]/80 rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 w-full"
                             ref={(el) => (eventRefs.current[eventIdx] = el)}
                         >
-                            <h2 className="text-2xl md:text-3xl font-semibold text-white text-center mb-4 md:mb-6">
+                            <h2 className="text-2xl md:text-3xl font-semibold text-white text-center mb-4 md:mb-6 break-words">
                                 {event.title}
                             </h2>
-                            <div className="relative w-full h-[200px] sm:h-[320px] md:h-[480px] rounded-2xl overflow-hidden shadow-lg mb-3 md:mb-4">
+                            <div className="relative w-full h-[180px] sm:h-[260px] md:h-[350px] rounded-2xl overflow-hidden shadow-lg mb-3 md:mb-4">
                                 <div className="w-full h-full cursor-grab active:cursor-grabbing">
                                     <AnimatePresence mode="wait">
                                         <motion.img
@@ -432,11 +506,23 @@ const Gallery = () => {
                                                 : indices[eventIdx] - 1
                                         )
                                     }
-                                    className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white text-black w-7 h-7 md:w-9 md:h-9 rounded-full flex items-center justify-center z-30 text-base md:text-lg opacity-90"
+                                    className="absolute left-1 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm text-gray-800 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center z-30 hover:bg-white hover:scale-110 transition-all duration-200 shadow-lg"
                                     aria-label="Previous image"
                                     style={{ userSelect: "none" }}
                                 >
-                                    &#8592;
+                                    <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2.5"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className="md:w-5 md:h-5"
+                                    >
+                                        <polyline points="15,18 9,12 15,6"></polyline>
+                                    </svg>
                                 </button>
                                 <button
                                     type="button"
@@ -449,30 +535,51 @@ const Gallery = () => {
                                                 : indices[eventIdx] + 1
                                         )
                                     }
-                                    className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white text-black w-7 h-7 md:w-9 md:h-9 rounded-full flex items-center justify-center z-30 text-base md:text-lg opacity-90"
+                                    className="absolute right-1 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm text-gray-800 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center z-30 hover:bg-white hover:scale-110 transition-all duration-200 shadow-lg"
                                     aria-label="Next image"
                                     style={{ userSelect: "none" }}
                                 >
-                                    &#8594;
+                                    <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2.5"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className="md:w-5 md:h-5"
+                                    >
+                                        <polyline points="9,18 15,12 9,6"></polyline>
+                                    </svg>
                                 </button>
                                 {/* Image counter */}
-                                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 text-white px-3 py-1 rounded-full text-xs md:text-sm">
+                                <div className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
                                     {indices[eventIdx] + 1} /{" "}
                                     {event.images.length}
                                 </div>
                             </div>
                             {/* Thumbnails */}
-                            <div className="w-full max-w-full">
+                            <div className="w-full relative overflow-hidden">
+                                {/* Left blur gradient */}
+                                <div className="absolute left-0 top-0 w-4 sm:w-6 md:w-8 h-full bg-gradient-to-r from-black/60 to-transparent z-10 pointer-events-none rounded-l-lg"></div>
+                                {/* Right blur gradient */}
+                                <div className="absolute right-0 top-0 w-4 sm:w-6 md:w-8 h-full bg-gradient-to-l from-black/60 to-transparent z-10 pointer-events-none rounded-r-lg"></div>
                                 <div
                                     ref={(el) =>
                                         (previewBarRefs.current[eventIdx] = el)
                                     }
-                                    className="flex gap-1 md:gap-2 mt-2 md:mt-4 overflow-x-auto pb-2 md:pb-4 scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-purple-200 justify-center max-w-full bg-black/40 rounded-lg px-1 cursor-grab active:cursor-grabbing select-none"
+                                    className="gallery-preview-bar flex gap-1 sm:gap-2 overflow-x-auto bg-white/5 rounded-lg px-1 sm:px-2 md:px-4 py-2 sm:py-3 cursor-grab active:cursor-grabbing select-none w-full"
                                     style={{
-                                        minHeight: "28px",
+                                        minHeight: "48px",
                                         maxWidth: "100%",
                                         WebkitOverflowScrolling: "touch",
                                         scrollBehavior: "smooth",
+                                        scrollbarWidth: "none",
+                                        msOverflowStyle: "none",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
                                     }}
                                 >
                                     {event.images.map((image, imgIdx) => (
@@ -480,22 +587,21 @@ const Gallery = () => {
                                             key={imgIdx}
                                             src={image.src}
                                             alt={`Thumbnail ${imgIdx + 1}`}
-                                            className={`w-8 h-8 md:w-10 md:h-10 object-cover cursor-pointer rounded-md transition-all border-2
+                                            className={`w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 object-cover cursor-pointer rounded-md transition-all duration-300 border-2 flex-shrink-0 hover:scale-105
                                                 ${
                                                     indices[eventIdx] === imgIdx
-                                                        ? "ring-2 ring-purple-500 border-purple-500 opacity-100"
-                                                        : "border-transparent opacity-60 hover:opacity-90"
+                                                        ? "border-white opacity-100 scale-105"
+                                                        : "border-white/20 opacity-70 hover:opacity-90 hover:border-white/40"
                                                 }`}
                                             style={{
                                                 aspectRatio: "1/1",
-                                                minWidth: "2rem",
-                                                minHeight: "2rem",
-                                                maxWidth: "2.5rem",
-                                                maxHeight: "2.5rem",
+                                                minWidth: "1.5rem",
+                                                minHeight: "1.5rem",
                                             }}
                                             onClick={() =>
                                                 setIndex(eventIdx, imgIdx)
                                             }
+                                            draggable="false"
                                         />
                                     ))}
                                 </div>

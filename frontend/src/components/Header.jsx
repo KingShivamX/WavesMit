@@ -47,18 +47,17 @@ const Navbar = () => {
                     />
                 </Link>
 
-                <div className="hidden sm:flex items-center gap-6 md:gap-8 ml-auto">
+                <div className="hidden sm:flex items-center gap-3 ml-auto">
                     {Links.map((link) => (
                         <Link
-                            className={`text-white font-medium text-base md:text-lg px-6 py-3 rounded-full 
-                                     transition-all duration-300 ease-in-out
-                                     hover:bg-[#2A0E61]/50 hover:shadow-lg hover:shadow-[#2A0E61]/50
-                                     transform hover:scale-105
-                                     ${
-                                         location.pathname === link.link
-                                             ? "bg-[#2A0E61]/20 shadow-lg shadow-[#2A0E61]/50"
-                                             : "bg-[#0300142f]"
-                                     }`}
+                            className={`text-white font-normal px-5 py-2.5 rounded-lg transition-all duration-300 transform active:scale-95
+                                ${
+                                    location.pathname === link.link
+                                        ? "bg-white/20 font-medium shadow-lg scale-105 border border-white/10"
+                                        : "bg-transparent"
+                                }
+                            `}
+                            style={{ fontSize: "1.05rem" }}
                             to={link.link}
                             key={link.name}
                         >
@@ -75,47 +74,40 @@ const Navbar = () => {
                 </div>
 
                 {isOpen && (
-                    <div
-                        className={`absolute top-[80px] md:top-[90px] left-0 w-full 
-                              ${
-                                  isHomePage
-                                      ? "bg-[#03001485]"
-                                      : "bg-[#030014cc]"
-                              }
-                              backdrop-blur-lg 
-                              shadow-[0_4px_30px_rgba(0,0,0,0.3)] 
-                              border-t border-white/20
-                              z-40
-                              animate-fadeIn`}
-                    >
-                        {Links.map((link, index) => (
-                            <Link
-                                className={`block font-medium text-base py-4 px-6
-                                         transition-all duration-300 ease-in-out
-                                         ${
-                                             index !== Links.length - 1
-                                                 ? "border-b border-gray-400/20"
-                                                 : ""
-                                         }
-                                         hover:pl-8
-                                         ${
-                                             isHomePage
-                                                 ? "text-white hover:bg-[#2A0E61]/50"
-                                                 : "text-white hover:bg-[#2A0E61]/30"
-                                         }
-                                         ${
-                                             location.pathname === link.link
-                                                 ? "bg-[#2A0E61]/50"
-                                                 : "bg-transparent"
-                                         }`}
-                                to={link.link}
-                                key={link.name}
-                                onClick={() => setIsOpen(false)}
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
-                    </div>
+                    <>
+                        {/* Backdrop overlay */}
+                        <div
+                            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30"
+                            onClick={() => setIsOpen(false)}
+                        />
+
+                        {/* Mobile sidebar */}
+                        <div className="fixed top-[80px] right-0 w-64 h-[calc(100vh-80px)] bg-[#030014]/95 backdrop-blur-xl shadow-2xl border-l border-white/10 z-40 transform transition-transform duration-300 ease-out">
+                            <div className="flex flex-col p-6 space-y-2">
+                                <div className="text-white/60 text-xs font-medium uppercase tracking-wider mb-4 px-2">
+                                    Navigation
+                                </div>
+                                {Links.map((link) => (
+                                    <Link
+                                        className={`text-white font-normal px-4 py-3 rounded-lg transition-all duration-300 flex items-center transform active:scale-95
+                                            ${
+                                                location.pathname === link.link
+                                                    ? "bg-white/20 font-medium shadow-lg scale-105 border border-white/10"
+                                                    : "bg-transparent"
+                                            }
+                                        `}
+                                        style={{ fontSize: "1.05rem" }}
+                                        to={link.link}
+                                        key={link.name}
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        <span className="w-1.5 h-1.5 bg-purple-400 rounded-full mr-3 opacity-60"></span>
+                                        {link.name}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
         </div>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import StarsCanvas from "../components/StarBackground"
 
 const Home = () => {
     const videoRef = useRef(null)
@@ -19,6 +20,7 @@ const Home = () => {
 
     return (
         <div className="relative flex flex-col w-full min-h-screen bg-[#040015]">
+            <StarsCanvas />
             {isLoading && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#040015]">
                     <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500"></div>
@@ -32,8 +34,8 @@ const Home = () => {
                 muted
                 loop
                 preload="auto"
-                className={`fixed -top-[5rem] md:-top-[3.6rem] left-0 w-full h-full object-cover rotate-180 z-0 transition-opacity duration-500 ${
-                    isLoading ? "opacity-0" : "opacity-100"
+                className={`fixed -top-[5rem] md:-top-[3.6rem] left-0 w-full h-full object-cover rotate-180 z-[1] transition-opacity duration-500 ${
+                    isLoading ? "opacity-0" : "opacity-70"
                 }`}
                 style={{ height: "100vh" }}
             >
@@ -41,34 +43,46 @@ const Home = () => {
                 Your browser does not support the video tag.
             </video>
 
-            <section className="relative z-10 flex flex-col items-center justify-center min-h-screen">
-                <div
-                    className="welcome-section text-center text-white p-6 md:p-16 max-w-5xl mx-auto"
-                    style={{ overflow: "visible" }}
-                >
-                    <h1
-                        className="text-4xl mt-8 md:text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight text-white"
-                        style={{
-                            textShadow: "0 4px 32px #000, 0 2px 8px #000",
-                        }}
-                    >
-                        Welcome to Waves
-                    </h1>
+            <section className="relative z-10 flex flex-col items-center justify-center min-h-screen pt-[90px]">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <div className="max-w-4xl mx-auto space-y-8">
+                        <h1
+                            className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-8"
+                            style={{
+                                textShadow:
+                                    "0 4px 32px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.6)",
+                            }}
+                        >
+                            Welcome to Waves
+                        </h1>
 
-                    <h2
-                        className="text-3xl md:text-4xl lg:text-5xl font-bold mb-16 tracking-wide pb-4 text-[#C7BFFF]"
-                        style={{ lineHeight: "1.3", overflow: "visible" }}
-                    >
-                        MIT Academy of Engineering
-                    </h2>
+                        <h2 className="heading-2 text-gray-200 mb-12">
+                            MIT Academy of Engineering
+                        </h2>
 
-                    <div className="space-y-10">
-                        <p className="text-lg md:text-xl lg:text-2xl leading-relaxed text-purple-200/90 font-light">
-                            We create opportunities for students to discover
-                            their potential, inspire others, and work on
-                            impactful projects that bridge the gap between
-                            education and societal needs.
-                        </p>
+                        <div className="max-w-3xl mx-auto mb-12">
+                            <p className="body-large leading-relaxed text-gray-300">
+                                We create opportunities for students to discover
+                                their potential, inspire others, and work on
+                                impactful projects that bridge the gap between
+                                education and societal needs.
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a
+                                href="/about"
+                                className="inline-block text-center px-6 py-3 bg-transparent border-2 border-white/30 text-white font-medium rounded-lg hover:border-white/50 hover:bg-white/10 transition-all duration-300"
+                            >
+                                Learn More About Us
+                            </a>
+                            <a
+                                href="/events"
+                                className="inline-block text-center px-6 py-3 bg-transparent border-2 border-white/30 text-white font-medium rounded-lg hover:border-white/50 hover:bg-white/10 transition-all duration-300"
+                            >
+                                Explore Our Events
+                            </a>
+                        </div>
                     </div>
                 </div>
             </section>

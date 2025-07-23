@@ -1,3 +1,5 @@
+import StarsCanvas from "../components/StarBackground"
+
 const pastEvents = [
     {
         title: 'Invited Talk by Padmashree Prof. H C Verma on "Importance of Science"',
@@ -194,93 +196,124 @@ const pastEvents = [
 const Events = () => {
     return (
         <div className="relative flex flex-col w-full min-h-screen bg-[#040015] pt-[90px]">
-            <div className="max-w-4xl mx-auto px-4 md:px-8 py-12 text-white">
-                <h1 className="text-3xl md:text-4xl font-bold text-white text-center mb-10">
-                    Our Events
-                </h1>
+            <StarsCanvas />
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 relative z-10">
+                <div className="text-center mb-12 sm:mb-16">
+                    <h1 className="heading-1 mb-4 sm:mb-6">Our Events</h1>
+                    <p className="body-large max-w-3xl mx-auto text-gray-300">
+                        Discover our journey through scientific exploration,
+                        workshops, and community engagement
+                    </p>
+                </div>
+
                 {/* Upcoming Events Section */}
-                <section className="mb-12">
-                    <h2 className="text-2xl md:text-3xl font-semibold text-white mb-6">
-                        Upcoming Events
-                    </h2>
-                    <div className="grid md:grid-cols-2 gap-8">
-                        <div className="bg-[#0300142f] backdrop-blur-md p-8 rounded-2xl shadow-lg shadow-[#2A0E61]/50 hover:shadow-[#2A0E61]/70 transition-all duration-300 hover:translate-y-[-4px]">
-                            <div className="text-purple-400 mb-2">
-                                April 15, 2025
+                <section className="mb-16">
+                    <h2 className="heading-2 mb-8">Upcoming Events</h2>
+                    <div className="grid lg:grid-cols-2 gap-8">
+                        <div className="card">
+                            <div className="flex items-center mb-4">
+                                <div className="w-3 h-3 bg-white rounded-full mr-3"></div>
+                                <span className="body-small text-gray-400 font-medium">
+                                    August, 2025
+                                </span>
                             </div>
-                            <h3 className="text-xl font-semibold mb-2 text-white">
+                            <h3 className="heading-3 mb-4">
                                 HC Verma Sir Talk
                             </h3>
-                            <p className="text-white/90 text-lg md:text-xl">
+                            <p className="body-regular">
                                 HC Verma Sir will be talking about the
                                 importance of science and how it can change the
                                 world.
                             </p>
                         </div>
-                        {/* Add more event cards as needed */}
                     </div>
                 </section>
+
                 {/* Past Events Section */}
                 <section>
-                    <h2 className="text-2xl md:text-3xl font-semibold text-white mb-6">
-                        Past Events
-                    </h2>
+                    <h2 className="heading-2 mb-8">Past Events</h2>
                     {/* Event Cards */}
-                    {pastEvents.map((event, idx) => (
-                        <div
-                            key={idx}
-                            className="bg-[#181828]/80 backdrop-blur-md p-6 rounded-2xl shadow-lg mb-10"
-                        >
-                            <h3 className="text-xl font-semibold mb-3 text-white">
-                                {event.title}
-                            </h3>
-                            <img
-                                src={event.img}
-                                alt={event.imgAlt}
-                                className="w-full h-[200px] md:h-[350px] object-cover rounded-xl mb-4"
-                                style={{ objectPosition: "center" }}
-                            />
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <div className="space-y-3">
-                                    {event.details.map((detail, i) => (
-                                        <div key={i}>
-                                            <h4 className="text-purple-400 font-semibold text-lg md:text-xl">
-                                                {detail.heading}
-                                            </h4>
-                                            {detail.content.map((line, j) => (
-                                                <p
-                                                    key={j}
-                                                    className="text-white/90 text-lg md:text-xl"
-                                                >
-                                                    {line}
-                                                </p>
-                                            ))}
-                                        </div>
-                                    ))}
+                    <div className="space-y-12">
+                        {pastEvents.map((event, idx) => (
+                            <div key={idx} className="card">
+                                <div className="mb-8">
+                                    <h3 className="heading-2 mb-6">
+                                        {event.title}
+                        </h3>
+                                    <div className="relative overflow-hidden rounded-xl">
+                                        <img
+                                            src={event.img}
+                                            alt={event.imgAlt}
+                                            className="w-full h-[250px] sm:h-[300px] lg:h-[400px] object-cover"
+                            style={{ objectPosition: "center" }}
+                        />
                                 </div>
-                                <div className="space-y-3">
-                                    <div>
-                                        <h4 className="text-purple-400 font-semibold text-lg md:text-xl">
-                                            Key Highlights
-                                        </h4>
-                                        <ul className="text-white/90 list-disc pl-4 space-y-1 text-lg md:text-xl">
-                                            {event.highlights.map((hl, k) => (
-                                                <li key={k}>{hl}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <div>
-                                        <h4 className="text-purple-400 font-semibold text-lg md:text-xl">
-                                            Impact
-                                        </h4>
-                                        <p className="text-white/90 text-lg md:text-xl">
-                                            {event.impact}
-                                        </p>
-                                    </div>
+                                </div>
+
+                                <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+                                    <div className="space-y-6">
+                                        <h4 className="heading-4 mb-4">
+                                            Event Details
+                                    </h4>
+                                        {event.details.map((detail, i) => (
+                                            <div
+                                                key={i}
+                                                className="border-l-4 border-white/20 pl-4"
+                                            >
+                                                <h5 className="body-small text-gray-400 font-medium mb-2 uppercase tracking-wider">
+                                                    {detail.heading}
+                                                </h5>
+                                                <div className="space-y-1">
+                                                    {detail.content.map(
+                                                        (line, j) => (
+                                                            <p
+                                                                key={j}
+                                                                className="body-regular"
+                                                            >
+                                                                {line}
+                                                            </p>
+                                                        )
+                                                    )}
+                                </div>
+                                            </div>
+                                        ))}
+                            </div>
+
+                                    <div className="space-y-8">
+                                <div>
+                                            <h4 className="heading-4 mb-4">
+                                        Key Highlights
+                                    </h4>
+                                            <ul className="space-y-3">
+                                                {event.highlights.map(
+                                                    (hl, k) => (
+                                                        <li
+                                                            key={k}
+                                                            className="flex items-start space-x-3"
+                                                        >
+                                                            <div className="w-2 h-2 bg-white rounded-full mt-2 flex-shrink-0"></div>
+                                                            <span className="body-regular">
+                                                                {hl}
+                                                            </span>
+                                        </li>
+                                                    )
+                                                )}
+                                    </ul>
+                                </div>
+
+                                <div>
+                                            <h4 className="heading-4 mb-4">
+                                                Impact & Outcomes
+                                    </h4>
+                                            <p className="body-regular leading-relaxed">
+                                                {event.impact}
+                                    </p>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </section>
             </div>
         </div>
