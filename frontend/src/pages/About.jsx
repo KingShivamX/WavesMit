@@ -29,17 +29,6 @@ const About = () => {
                     </section>
 
                     <section className="card">
-                        <h2 className="heading-3 mb-6">Our Mission</h2>
-                        <p className="body-regular leading-relaxed">
-                            We are committed to fostering scientific research,
-                            promoting STEM education, and building a community
-                            of innovative thinkers. Through our various
-                            initiatives and projects, we aim to make complex
-                            scientific concepts accessible to everyone.
-                        </p>
-                    </section>
-
-                    <section className="card">
                         <h2 className="heading-3 mb-8">What We Do</h2>
                         <div className="grid sm:grid-cols-2 gap-6">
                             <div className="flex items-start space-x-4">
