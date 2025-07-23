@@ -50,7 +50,7 @@ const Navbar = () => {
                 <div className="hidden sm:flex items-center gap-3 ml-auto">
                     {Links.map((link) => (
                         <Link
-                            className={`text-white font-normal px-5 py-2.5 rounded-lg transition-all duration-300 transform active:scale-95
+                            className={`text-white font-normal px-5 py-2 rounded-lg transition-all duration-300 transform active:scale-95
                                 ${
                                     location.pathname === link.link
                                         ? "bg-white/20 font-medium shadow-lg scale-105 border border-white/10"
@@ -89,7 +89,7 @@ const Navbar = () => {
                                 </div>
                                 {Links.map((link) => (
                                     <Link
-                                        className={`text-white font-normal px-4 py-3 rounded-lg transition-all duration-300 flex items-center transform active:scale-95
+                                        className={`text-white font-normal px-4 py-2.5 rounded-lg transition-all duration-300 flex items-center transform active:scale-95
                                             ${
                                                 location.pathname === link.link
                                                     ? "bg-white/20 font-medium shadow-lg scale-105 border border-white/10"

@@ -2,6 +2,20 @@ import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import StarsCanvas from "../components/StarBackground"
 
+// Add custom CSS for hiding scrollbar
+const scrollbarStyles = `
+.gallery-preview-bar::-webkit-scrollbar {
+    display: none;
+}
+.gallery-preview-bar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.gallery-preview-bar.dragging {
+    scroll-behavior: auto;
+}
+`
+
 const events = [
     {
         key: "hcverma",
@@ -245,21 +259,37 @@ const Gallery = () => {
 
     // Drag-to-scroll logic for preview bar
     const previewBarRefs = useRef([])
-    // Enhanced drag-to-scroll logic for preview bar
+    // Enhanced drag-to-scroll logic for preview bar with auto-centering
     useEffect(() => {
         previewBarRefs.current.forEach((bar, barIndex) => {
             if (!bar) return
 
-            // Check if content overflows and adjust justification
-            const checkOverflow = () => {
-                if (bar.scrollWidth > bar.clientWidth) {
-                    bar.style.justifyContent = "flex-start"
-                } else {
-                    bar.style.justifyContent = "center"
+            // Center the current active thumbnail
+            const centerActiveThumbnail = () => {
+                const currentIndex = indices[barIndex]
+                const thumbnails = bar.children
+                if (thumbnails[currentIndex]) {
+                    const thumbnail = thumbnails[currentIndex]
+                    const barRect = bar.getBoundingClientRect()
+                    const thumbRect = thumbnail.getBoundingClientRect()
+
+                    const barCenter = barRect.width / 2
+                    const thumbCenter =
+                        thumbRect.left - barRect.left + thumbRect.width / 2
+                    const scrollOffset = thumbCenter - barCenter
+
+                    bar.scrollTo({
+                        left: bar.scrollLeft + scrollOffset,
+                        behavior: "smooth",
+                    })
                 }
             }
 
-            // Check on load and resize
+            // Center on load, resize, and when active image changes
+            const checkOverflow = () => {
+                setTimeout(centerActiveThumbnail, 100) // Small delay to ensure DOM is ready
+            }
+
             checkOverflow()
             window.addEventListener("resize", checkOverflow)
             let isDown = false
@@ -271,6 +301,9 @@ const Gallery = () => {
 
             // Mouse events
             const handleMouseDown = (e) => {
+                // Don't interfere with clicks on thumbnail images
+                if (e.target.tagName === "IMG") return
+
                 isDown = true
                 bar.classList.add("dragging")
                 bar.style.cursor = "grabbing"
@@ -296,19 +329,25 @@ const Gallery = () => {
 
             const handleMouseMove = (e) => {
                 if (!isDown) return
-                e.preventDefault()
+
+                // Only prevent default and scroll if we're actually dragging
                 const x = e.pageX - bar.offsetLeft
                 const walk = (x - startX) * 2 // Increased sensitivity
-                bar.scrollLeft = scrollLeft - walk
 
-                // Calculate velocity for momentum
-                const currentTime = Date.now()
-                const deltaTime = currentTime - lastTime
-                if (deltaTime > 0) {
-                    velocity = (e.pageX - lastX) / deltaTime
+                // Only start dragging if mouse has moved significantly
+                if (Math.abs(walk) > 5) {
+                    e.preventDefault()
+                    bar.scrollLeft = scrollLeft - walk
+
+                    // Calculate velocity for momentum
+                    const currentTime = Date.now()
+                    const deltaTime = currentTime - lastTime
+                    if (deltaTime > 0) {
+                        velocity = (e.pageX - lastX) / deltaTime
+                    }
+                    lastX = e.pageX
+                    lastTime = currentTime
                 }
-                lastX = e.pageX
-                lastTime = currentTime
             }
 
             // Touch events with improved handling
@@ -318,6 +357,9 @@ const Gallery = () => {
             let touchLastTime = 0
 
             const handleTouchStart = (e) => {
+                // Don't interfere with touches on thumbnail images
+                if (e.target.tagName === "IMG") return
+
                 isDown = true
                 const touch = e.touches[0]
                 touchStartX = touch.pageX - bar.offsetLeft
@@ -415,6 +457,33 @@ const Gallery = () => {
         }
     }, [])
 
+    // Center thumbnails when indices change
+    useEffect(() => {
+        indices.forEach((currentIndex, eventIdx) => {
+            const bar = previewBarRefs.current[eventIdx]
+            if (bar) {
+                setTimeout(() => {
+                    const thumbnails = bar.children
+                    if (thumbnails[currentIndex]) {
+                        const thumbnail = thumbnails[currentIndex]
+                        const barRect = bar.getBoundingClientRect()
+                        const thumbRect = thumbnail.getBoundingClientRect()
+
+                        const barCenter = barRect.width / 2
+                        const thumbCenter =
+                            thumbRect.left - barRect.left + thumbRect.width / 2
+                        const scrollOffset = thumbCenter - barCenter
+
+                        bar.scrollTo({
+                            left: bar.scrollLeft + scrollOffset,
+                            behavior: "smooth",
+                        })
+                    }
+                }, 100)
+            }
+        })
+    }, [indices])
+
     // Auto-advance only the active event's carousel, and allow timer reset
     useEffect(() => {
         if (timerRef.current) clearTimeout(timerRef.current)
@@ -439,6 +508,30 @@ const Gallery = () => {
             updated[eventIdx] = newIdx
             return updated
         })
+
+        // Center the newly selected thumbnail
+        setTimeout(() => {
+            const bar = previewBarRefs.current[eventIdx]
+            if (bar) {
+                const thumbnails = bar.children
+                if (thumbnails[newIdx]) {
+                    const thumbnail = thumbnails[newIdx]
+                    const barRect = bar.getBoundingClientRect()
+                    const thumbRect = thumbnail.getBoundingClientRect()
+
+                    const barCenter = barRect.width / 2
+                    const thumbCenter =
+                        thumbRect.left - barRect.left + thumbRect.width / 2
+                    const scrollOffset = thumbCenter - barCenter
+
+                    bar.scrollTo({
+                        left: bar.scrollLeft + scrollOffset,
+                        behavior: "smooth",
+                    })
+                }
+            }
+        }, 50)
+
         // Reset timer if this is the active event
         if (eventIdx === activeEventIdx) {
             if (timerRef.current) clearTimeout(timerRef.current)
@@ -457,9 +550,12 @@ const Gallery = () => {
     }
 
     return (
-        <div className="w-full min-h-screen bg-[#040015] pt-[90px] z-10 relative">
-            <StarsCanvas />
-            <div className="max-w-4xl mx-auto px-2 sm:px-4 md:px-8 py-8 md:py-12">
+        <div className="w-full min-h-screen bg-[#040015] pt-[90px] relative">
+            <style>{scrollbarStyles}</style>
+            <div className="fixed inset-0 z-0">
+                <StarsCanvas />
+            </div>
+            <div className="max-w-4xl mx-auto px-2 sm:px-4 md:px-8 py-8 md:py-12 relative z-10">
                 <h1 className="text-3xl md:text-4xl font-bold text-white text-center mb-8 md:mb-10 break-words">
                     Picture Gallery
                 </h1>
@@ -467,10 +563,10 @@ const Gallery = () => {
                     {events.map((event, eventIdx) => (
                         <div
                             key={event.key}
-                            className="mb-6 bg-[#181828]/80 rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 w-full"
+                            className="mb-6 bg-[#181828] rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 w-full relative z-20"
                             ref={(el) => (eventRefs.current[eventIdx] = el)}
                         >
-                            <h2 className="text-2xl md:text-3xl font-semibold text-white text-center mb-4 md:mb-6 break-words">
+                            <h2 className="text-2xl md:text-3xl font-semibold text-white text-center mb-4 md:mb-6 break-words relative z-30">
                                 {event.title}
                             </h2>
                             <div className="relative w-full h-[180px] sm:h-[260px] md:h-[350px] rounded-2xl overflow-hidden shadow-lg mb-3 md:mb-4">
@@ -506,7 +602,7 @@ const Gallery = () => {
                                                 : indices[eventIdx] - 1
                                         )
                                     }
-                                    className="absolute left-1 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm text-gray-800 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center z-30 hover:bg-white hover:scale-110 transition-all duration-200 shadow-lg"
+                                    className="absolute left-1 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white text-gray-800 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center z-30 hover:bg-gray-100 hover:scale-110 transition-all duration-200 shadow-lg"
                                     aria-label="Previous image"
                                     style={{ userSelect: "none" }}
                                 >
@@ -535,7 +631,7 @@ const Gallery = () => {
                                                 : indices[eventIdx] + 1
                                         )
                                     }
-                                    className="absolute right-1 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm text-gray-800 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center z-30 hover:bg-white hover:scale-110 transition-all duration-200 shadow-lg"
+                                    className="absolute right-1 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white text-gray-800 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center z-30 hover:bg-gray-100 hover:scale-110 transition-all duration-200 shadow-lg"
                                     aria-label="Next image"
                                     style={{ userSelect: "none" }}
                                 >
@@ -554,7 +650,7 @@ const Gallery = () => {
                                     </svg>
                                 </button>
                                 {/* Image counter */}
-                                <div className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
+                                <div className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-black text-white px-2 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
                                     {indices[eventIdx] + 1} /{" "}
                                     {event.images.length}
                                 </div>
@@ -562,23 +658,47 @@ const Gallery = () => {
                             {/* Thumbnails */}
                             <div className="w-full relative overflow-hidden">
                                 {/* Left blur gradient */}
-                                <div className="absolute left-0 top-0 w-4 sm:w-6 md:w-8 h-full bg-gradient-to-r from-black/60 to-transparent z-10 pointer-events-none rounded-l-lg"></div>
+                                <div className="absolute left-0 top-0 w-6 sm:w-8 md:w-12 h-full bg-gradient-to-r from-[#181828] to-transparent z-10 pointer-events-none rounded-l-lg"></div>
                                 {/* Right blur gradient */}
-                                <div className="absolute right-0 top-0 w-4 sm:w-6 md:w-8 h-full bg-gradient-to-l from-black/60 to-transparent z-10 pointer-events-none rounded-r-lg"></div>
+                                <div className="absolute right-0 top-0 w-6 sm:w-8 md:w-12 h-full bg-gradient-to-l from-[#181828]/90 to-transparent z-10 pointer-events-none rounded-r-lg"></div>
+                                {/* Scroll indicators */}
+                                <div className="absolute left-1 top-1/2 -translate-y-1/2 text-white/60 z-20 pointer-events-none">
+                                    <svg
+                                        width="12"
+                                        height="12"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                    >
+                                        <polyline points="15,18 9,12 15,6"></polyline>
+                                    </svg>
+                                </div>
+                                <div className="absolute right-1 top-1/2 -translate-y-1/2 text-white/60 z-20 pointer-events-none">
+                                    <svg
+                                        width="12"
+                                        height="12"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                    >
+                                        <polyline points="9,18 15,12 9,6"></polyline>
+                                    </svg>
+                                </div>
                                 <div
                                     ref={(el) =>
                                         (previewBarRefs.current[eventIdx] = el)
                                     }
-                                    className="gallery-preview-bar flex gap-1 sm:gap-2 overflow-x-auto bg-white/5 rounded-lg px-1 sm:px-2 md:px-4 py-2 sm:py-3 cursor-grab active:cursor-grabbing select-none w-full"
+                                    className="gallery-preview-bar flex gap-2 sm:gap-3 overflow-x-auto bg-white/10 rounded-lg px-3 sm:px-4 md:px-6 py-3 sm:py-4 cursor-grab active:cursor-grabbing select-none w-full hover:bg-white/15 transition-colors duration-200"
                                     style={{
-                                        minHeight: "48px",
+                                        minHeight: "60px",
                                         maxWidth: "100%",
                                         WebkitOverflowScrolling: "touch",
                                         scrollBehavior: "smooth",
                                         scrollbarWidth: "none",
                                         msOverflowStyle: "none",
                                         display: "flex",
-                                        justifyContent: "center",
                                         alignItems: "center",
                                     }}
                                 >
@@ -587,16 +707,16 @@ const Gallery = () => {
                                             key={imgIdx}
                                             src={image.src}
                                             alt={`Thumbnail ${imgIdx + 1}`}
-                                            className={`w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 object-cover cursor-pointer rounded-md transition-all duration-300 border-2 flex-shrink-0 hover:scale-105
+                                            className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-cover cursor-pointer rounded-lg transition-all duration-300 border-2 flex-shrink-0 hover:scale-110 hover:shadow-lg
                                                 ${
                                                     indices[eventIdx] === imgIdx
-                                                        ? "border-white opacity-100 scale-105"
-                                                        : "border-white/20 opacity-70 hover:opacity-90 hover:border-white/40"
+                                                        ? "border-purple-400 opacity-100 scale-110 shadow-lg shadow-purple-400/50 ring-2 ring-purple-300/30"
+                                                        : "border-white/30 opacity-70 hover:opacity-100 hover:border-white/60 hover:scale-105"
                                                 }`}
                                             style={{
                                                 aspectRatio: "1/1",
-                                                minWidth: "1.5rem",
-                                                minHeight: "1.5rem",
+                                                minWidth: "2rem",
+                                                minHeight: "2rem",
                                             }}
                                             onClick={() =>
                                                 setIndex(eventIdx, imgIdx)
