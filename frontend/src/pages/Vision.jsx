@@ -16,7 +16,7 @@ const Vision = () => {
                 <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
                     <section className="card">
                         <h2 className="heading-2 mb-6 text-center">
-                            Our Vision
+                            Vision
                         </h2>
                         <p className="body-regular leading-relaxed">
                             To establish Waves as a long-lasting, transformative
@@ -29,7 +29,7 @@ const Vision = () => {
 
                     <section className="card">
                         <h2 className="heading-2 mb-6 text-center">
-                            Our Mission
+                            Mission
                         </h2>
                         <p className="body-regular leading-relaxed">
                             To cultivate a vibrant and inclusive platform where
@@ -43,7 +43,7 @@ const Vision = () => {
                 </div>
 
                 <div className="card text-center">
-                    <h3 className="heading-3 mb-6">Our Impact</h3>
+                    <h3 className="heading-3 mb-6">Impact</h3>
                     <p className="body-regular leading-relaxed max-w-4xl mx-auto">
                         Through our vision and mission, we strive to create
                         lasting change in the scientific community, fostering
