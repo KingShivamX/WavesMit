@@ -52,7 +52,7 @@ npm run dev
 ## 🧑‍💻 Author
 
 **Shivam Hippalgave**  
-📧 [shivam@example.com]  
+🔗 [shivam.app](shivam.app)  
 🔗 [github.com/KingShivamX](https://github.com/KingShivamX)
 
 ---
