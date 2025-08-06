@@ -2,9 +2,30 @@ import React from "react"
 import StarsCanvas from "../components/StarBackground"
 
 const contacts = [
-    { name: "Om", img: "/contacts/om.jpg" },
-    { name: "Vaishnavi", img: "/contacts/Vaishnavi .jpg" },
-    { name: "Neha", img: "/contacts/Neha.jpg" },
+    {
+        name: "Hrishikesh Patil",
+        img: "/contacts/Hrishikesh Patil.jpg",
+        role: "Team Coordinator",
+        linkedin: "https://www.linkedin.com/in/hrishikesh-patil-a77873376",
+    },
+    {
+        name: "Om",
+        img: "/contacts/om.jpg",
+        role: "Team Member",
+        linkedin: "https://www.linkedin.com/in/om-kolte-26a6b3253",
+    },
+    {
+        name: "Vaishnavi",
+        img: "/contacts/Vaishnavi .jpg",
+        role: "Team Member",
+        linkedin: "https://www.linkedin.com/in/vaishnavibansode",
+    },
+    {
+        name: "Neha",
+        img: "/contacts/Neha.jpg",
+        role: "Team Member",
+        linkedin: "https://www.linkedin.com/in/neha-narkhede-065593363",
+    },
 ]
 
 const Contacts = () => (
@@ -19,23 +40,25 @@ const Contacts = () => (
                 </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-12">
                 {contacts.map((contact, index) => (
                     <div key={contact.name} className="card text-center">
                         <div className="mb-6">
                             <img
                                 src={contact.img}
                                 alt={contact.name}
-                                className="w-32 h-32 object-cover rounded-full mx-auto shadow-lg border-4 border-white/20 bg-white"
+                                className="w-28 h-28 sm:w-32 sm:h-32 object-cover rounded-full mx-auto shadow-lg border-4 border-white/20 bg-white"
                             />
                         </div>
                         <h3 className="heading-4 mb-2">{contact.name}</h3>
                         <p className="body-small mb-6 text-gray-400">
-                            Team Member
+                            {contact.role}
                         </p>
                         <div className="flex justify-center">
                             <a
-                                href="#"
+                                href={contact.linkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300"
                             >
                                 <svg
